@@ -2,15 +2,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace PracticeCoding
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            string result = ReverseWords("The sky is blue");
-            Console.WriteLine(result);
+            Node root = new Node(1);
+            root.left = new Node(2);
+            root.right = new Node(3);
+
+            root.right.left = new Node(4);
+            root.right.left.left = new Node(6);
+            root.right.left.right = new Node(5);
+
+            root.right.left.left.left = new Node(8);
+
+            IList<IList<int>> result = LevelOrder(root);
+            Console.WriteLine("[");
+            foreach(var res in result)
+            {
+                PrintListInt(res);
+                if(result[result.Count-1]!=res)
+                    Console.Write(",");
+                Console.WriteLine();
+            }
+            Console.WriteLine("]");
             Console.ReadLine();
         }
 
@@ -33,7 +52,7 @@ namespace PracticeCoding
                         maxLength = collectedS.Length;
                         collectedSFinal = collectedS;
                     }
-                        
+
                     collectedS = collectedS.Substring(repeatedIndex + 1) + c;
                 }
             }
@@ -42,10 +61,10 @@ namespace PracticeCoding
                 maxLength = collectedS.Length;
                 collectedSFinal = collectedS;
             }
-               
+
             Console.WriteLine(maxLength);
             Console.WriteLine(collectedSFinal);
-            
+
         }
 
         public static bool isValidParenthesis(String s)
@@ -69,7 +88,7 @@ namespace PracticeCoding
 
             for (int i = 0; i < s.Length; i++)
             {
-                
+
                 if (stack.Count == 0)
                 {
                     if (openingClosing.ContainsKey(s[i]))
@@ -77,11 +96,11 @@ namespace PracticeCoding
                     else
                         return false;
                 }
-                else if(openingClosing.ContainsKey(s[i]))
+                else if (openingClosing.ContainsKey(s[i]))
                 {
                     stack.Push(s[i]);
                 }
-                else if(stack.Count == 0)
+                else if (stack.Count == 0)
                 {
                     return false;
                 }
@@ -117,7 +136,7 @@ namespace PracticeCoding
             {
                 dp[i] = dp[i - 1] + dp[i - 2];
             }
-            
+
 
             return dp[n];
         }
@@ -126,13 +145,13 @@ namespace PracticeCoding
         {
             int max = 1;
             int sum = 0;
-            for(int i =0; i<nums.Length; i++)
+            for (int i = 0; i < nums.Length; i++)
             {
                 sum += nums[i];
 
                 if (sum < 0)
                 {
-                    max = Math.Max(max, Math.Abs(sum)+1);
+                    max = Math.Max(max, Math.Abs(sum) + 1);
                 }
             }
 
@@ -143,17 +162,18 @@ namespace PracticeCoding
         {
             if (nums.Length != 0)
             {
-                for(int i = 0; i<nums.Length-1; i++)
+                for (int i = 0; i < nums.Length - 1; i++)
                 {
-                    for(int j = i + 1;j < nums.Length; j++){
-                        if(nums[i]==0 && nums[j] != 0)
+                    for (int j = i + 1; j < nums.Length; j++)
+                    {
+                        if (nums[i] == 0 && nums[j] != 0)
                         {
                             int temp = nums[i];
                             nums[i] = nums[j];
                             nums[j] = temp;
                             break;
                         }
-                    
+
                     }
 
                 }
@@ -174,7 +194,7 @@ namespace PracticeCoding
 
         public static bool HappyNumber(int n)
         {
-            while(n != 1)
+            while (n != 1)
             {
                 n = sumofSquares(n);
             }
@@ -189,10 +209,10 @@ namespace PracticeCoding
             string s = n.ToString();
             char[] sArray = s.ToArray();
             int sum = 0;
-            foreach(var c in sArray)
+            foreach (var c in sArray)
             {
                 int temp = Convert.ToInt32(c.ToString());
-                sum += (temp* temp);
+                sum += (temp * temp);
             }
 
             return sum;
@@ -202,7 +222,7 @@ namespace PracticeCoding
         {
             // write your code in C# 6.0 with .NET 4.5 (Mono)
 
-            if(A.Length != 0)
+            if (A.Length != 0)
             {
                 Array.Sort(A);
 
@@ -210,7 +230,7 @@ namespace PracticeCoding
                 int max = A[A.Length - 1];
                 if (min <= 0 && max <= 0)
                     return 1;
-                if (min == max && min >1)
+                if (min == max && min > 1)
                     return 1;
                 if (min > 1)
                     return 1;
@@ -235,22 +255,306 @@ namespace PracticeCoding
             {
                 return 1;
             }
-            
+
         }
 
         public static string ReverseWords(string s)
         {
             string[] strArray = s.Split(" ");
+            return string.Join(" ", strArray.Reverse());
+        }
 
-            s = string.Empty;
+        public static void EggDroppingProblem(int stairs, int eggs)
+        {
+            int total = 0;
 
-            for(int i = strArray.Length-1; i>=0; i--)
+        }
+
+
+        //******************Binary Tree Printing Paths Starts****************/////
+        public class Node
+        {
+            public int data;
+            public Node right;
+            public Node left;
+
+            public Node(int value)
             {
-               
-                s +=" "+ strArray[i];
+                this.data = value;
+                this.right = null;
+                this.left = null;
             }
 
-            return s.TrimStart();
         }
+
+        public static void printPathsOfTree(Node root, int[] paths, int pathLength)
+        {
+            if (root == null)
+                return;
+
+            paths[pathLength]=root.data;
+            pathLength++;
+            if (root.left == null && root.right == null)
+            {
+                printArray(paths, pathLength);
+            }
+            else
+            {
+                printPathsOfTree(root.left, paths, pathLength);
+                printPathsOfTree(root.right, paths, pathLength);
+
+            }
+        }
+
+        public static void printPathsOfTreeUsingStack(Node root, Stack<int> paths)
+        {
+            if (root == null)
+                return;
+
+            paths.Push(root.data);
+
+            if (root.left == null && root.right == null)
+            {
+                string strInput = string.Empty;
+                printStack(paths, strInput);
+                Console.WriteLine();
+            }
+            else
+            {
+                printPathsOfTreeUsingStack(root.left, paths);
+                printPathsOfTreeUsingStack(root.right, paths);
+
+            }
+            
+            paths.Pop();
+        }
+
+        //*******************Solved on 04/24/2020 Starts **********************////
+
+        public static int MaxDepthofTreeUsingStack(Node root, Stack<int> paths, ArrayList depths, int depthRight, int depthLeft)
+        {
+            int depth = Math.Max(depthRight,depthLeft);
+            if (root == null)
+                return depth;
+
+            paths.Push(root.data);
+            int stackcount = paths.Count;
+            depths.Add(stackcount);
+            
+            depthLeft = MaxDepthofTreeUsingStack(root.left, paths, depths, depthRight, depthLeft);
+            depthRight = MaxDepthofTreeUsingStack(root.right, paths, depths, depthRight, depthLeft);
+
+            paths.Pop();
+
+            depths.Sort();
+            depth = Math.Max(depth,Convert.ToInt32(depths[depths.Count - 1]));
+
+            return depth;
+        }
+
+        public class Pair
+        {
+            public Node n;
+            public int level;
+            public Pair(Node n, int level)
+            {
+                this.n = n;
+                this.level = level;
+            }
+
+        }
+
+        public static void printNodesByLevelOfTree(Node root, Pair pair, Dictionary<int, List<Pair>> elements)
+        {
+            if (root == null)
+                return;
+
+            Queue<Pair> queue = new Queue<Pair>();
+            queue.Enqueue(pair);
+
+            while(queue.Count > 0)
+            {
+                Pair p = queue.Dequeue();
+                if (!elements.ContainsKey(p.level))
+                {
+                    List<Pair> pairs = new List<Pair>();
+                    pairs.Add(p);
+                    elements.Add(p.level, pairs);
+                }
+                else
+                {
+                        elements[p.level].Add(p);
+                }
+
+                if (p.n.left != null)
+                {
+                    Pair tempLeft = new Pair(p.n.left, p.level + 1);
+                    queue.Enqueue(tempLeft);
+                }
+
+                if (p.n.right != null)
+                {
+                    Pair tempRight = new Pair(p.n.right, p.level + 1);
+                    queue.Enqueue(tempRight);
+                }
+            }
+
+            Console.WriteLine("[");
+            foreach(var ele in elements)
+            {
+                PrintList(ele.Value);
+                Console.WriteLine();
+            }
+            Console.WriteLine("]");
+
+        }
+
+        public static void PrintList(List<Pair> ListElements)
+        {
+            string str = string.Empty;
+            foreach(var item in ListElements)
+            {
+                str += (item.n.data + ",");
+            }
+            Console.Write("[" + str.TrimEnd(',') + "],");
+        }
+
+        public static void PrintListInt(IList<int> ListElements)
+        {
+            string str = string.Empty;
+            foreach (var item in ListElements)
+            {
+                str += (item + ",");
+                
+            }
+
+            Console.Write("[" + str.TrimEnd(',') + "]");
+            
+        }
+
+        public static IList<IList<int>> LevelOrder(Node root)
+        {
+            Pair p = new Pair(root, 1);
+            List<List<Pair>> elements = new List<List<Pair>>();
+
+            List<List<Pair>> resultPairs = printNodesByLevelOfTree(root, p, elements);
+            IList<IList<int>> result = new List<IList<int>>();
+            foreach (var res in resultPairs)
+            {
+                result.Add(res.Select(e => e.n.data).ToList());
+            }
+
+            return result;
+        }
+
+        public static List<List<Pair>> printNodesByLevelOfTree(Node root, Pair pair, List<List<Pair>> elements)
+        {
+            if (root == null)
+                return elements;
+
+            Queue<Pair> queue = new Queue<Pair>();
+            queue.Enqueue(pair);
+
+            while (queue.Count > 0)
+            {
+                Pair p = queue.Dequeue();
+
+                List<Pair> res = elements.SelectMany(x => x.Where(z => z.level == p.level)).ToList();
+
+
+                if (elements.Count == 0 || res.Count == 0)
+                {
+                    List<Pair> pairs = new List<Pair>();
+                    pairs.Add(p);
+                    elements.Add(pairs);
+                }
+                else
+                {
+                    int index = elements.FindIndex(a => a[0].level == res[0].level);
+                    res.Add(p);
+                    elements[index] = res;
+
+                }
+
+                if (p.n.left != null)
+                {
+                    Pair tempLeft = new Pair(p.n.left, p.level + 1);
+                    queue.Enqueue(tempLeft);
+                }
+
+                if (p.n.right != null)
+                {
+                    Pair tempRight = new Pair(p.n.right, p.level + 1);
+                    queue.Enqueue(tempRight);
+                }
+            }
+
+            return elements;
+        }
+
+
+        //*******************Solved on 04/24/2020 Ends **********************////
+
+        public static  void printStack(Stack<int> inputStack, string strInput)
+        {
+
+            if (inputStack.Count!=0)
+            {
+                int x = inputStack.Peek();
+
+                inputStack.Pop();
+
+                printStack(inputStack, strInput);
+
+                strInput += Convert.ToString(x) +"->";
+
+                Console.Write(strInput);
+
+                inputStack.Push(x);
+            }
+
+        }
+
+
+        public static void printArray(int[] paths, int pathLength)
+        {
+            for(int i = 0; i< pathLength; i++)
+            {
+                Console.Write(paths[i]+"->");
+            }
+            Console.WriteLine();
+        }
+
+        //******************Binary Tree Printing Paths Ends****************/////
+
+        //*******************Solved on 04/24/2020 Starts **********************////
+
+        public static int MaxProfitWithKTransactions(int[] prices, int k)
+        {
+            if (prices.Length == 0)
+                return 0;
+
+            int[,] profits = new int[k + 1, prices.Length];
+
+            for(int t = 1; t < k + 1; t++)
+            {
+                int maxSoFar = Int32.MinValue;
+
+                for(int d = 1; d < prices.Length; d++)
+                {
+                    maxSoFar = Math.Max(maxSoFar, (profits[t - 1,d - 1]) - prices[d-1]);
+
+                    profits[t, d] = Math.Max(profits[t, d-1], maxSoFar+prices[d]);
+                    Console.Write(profits[t, d] + " ,");
+                }
+                Console.WriteLine();
+            }
+            
+            return profits[k,prices.Length-1];
+        }
+
+        //*******************Solved on 04/24/2020 Ends **********************////
     }
+
+
 }
